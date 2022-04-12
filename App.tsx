@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { Alert, StyleSheet, Text, View } from 'react-native';
 import agent from './agent/agent';
 import { Category } from './Models/CategoryModel';
@@ -8,40 +8,44 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from './store/store';
 import Header from './Components/Shared/Header';
 import PorductSwipper from './Components/Widgets/PorductSwipper';
+import MainNavigator from './Components/MainNavigator';
+import { NavigationContainer } from '@react-navigation/native';
 
-  function App(props:any) {
+function App(props: any) {
 
-   const {userStore,ProductStore,CategoryStore} = useStore()
+  const { userStore, ProductStore, CategoryStore } = useStore()
 
-  const fetchFromEpress=async()=>{
- 
-    
-    await ProductStore.getProducts() 
+  const fetchFromEpress = async () => {
+
+
+    await ProductStore.getProducts()
     await CategoryStore.getCatgories()
 
   }
- 
 
-  useEffect(()=>{
-  fetchFromEpress() 
-   
-  },[])
-   
-    
+
+  useEffect(() => {
+    fetchFromEpress()
+
+  }, [])
+
+  {/* <Header/> */ }
   return (
-    <View style={styles.container}>
-      <Header/>
-      <ProductContainer/>
-    
-     
- 
-    </View>
+
+
+    <NavigationContainer>
+
+    <MainNavigator />
+
+    < /NavigationContainer >
+
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    
+
     flex: 1,
     backgroundColor: '#f0f0f0',
 
@@ -51,3 +55,5 @@ const styles = StyleSheet.create({
 
 
 export default observer(App)
+
+//   // 

@@ -5,6 +5,7 @@ import agent from './../agent/agent';
 export class CategoryStore {
 
     categories = new Array<Category>()
+    selectedGameCategory = new Category("", "", "", "")
 
     getCatgories = async () => {
 
@@ -13,6 +14,15 @@ export class CategoryStore {
                 this.categories = res.data
             })
 
+        })
+    }
+
+    getCategoryType = async (id: string) => {
+
+        runInAction(async () => {
+            await agent.Category.getTypeCategory(id).then(res => {
+                this.selectedGameCategory = res.data
+            })
         })
     }
 
