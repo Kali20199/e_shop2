@@ -1,6 +1,7 @@
 import { makeAutoObservable, reaction, runInAction } from 'mobx'
 import { Category } from '../Models/CategoryModel'
 import agent from './../agent/agent';
+import { Alert } from 'react-native';
 
 export class CategoryStore {
 
@@ -17,14 +18,18 @@ export class CategoryStore {
         })
     }
 
-    getCategoryType = async (id: string) => {
 
-        runInAction(async () => {
-            await agent.Category.getTypeCategory(id).then(res => {
-                this.selectedGameCategory = res.data
-            })
-        })
-    }
+    // getCategoryType = async (id: string) => {
+
+    //     runInAction(async () => {
+    //         const selected = await agent.Category.getTypeCategory(id).then(res => {
+    //             this.selectedGameCategory = res.data
+    //             Alert.alert(this.selectedGameCategory.color)
+    //         }).catch(err => {
+    //             Alert.alert("Error")
+    //         })
+    //     })
+    // }
 
 
     constructor() {
