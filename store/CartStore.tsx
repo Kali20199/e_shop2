@@ -21,10 +21,11 @@ export class CartStore {
             if (!Item) {
                 
                 this.MyCart.push(new CartItemModel(qty,id,product))
+                this.count++
             } else { 
                 Item.qty+=1
-                this.count++
-                // this.MyCart.find(item => item._id == product._id)!.qty+=1
+                
+              
             }
         })
     }
@@ -32,6 +33,7 @@ export class CartStore {
     deleteCartItem = async (id: string) => { 
         runInAction(() => {
             const cart =  this.MyCart.filter(product => product._id !== id)
+            this.count--
             this.MyCart = cart
         })
     }

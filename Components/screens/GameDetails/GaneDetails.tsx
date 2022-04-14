@@ -51,7 +51,7 @@ function GaneDetails() {
                     <View style={styles.btAdd}>
                         <Text style={{ ...styles.price, color: selectedProduct.color }}>{selectedProduct.price}$</Text>
                         <Button color={selectedProduct.color} onPress={() => {
-                                addtoCart(selectedProduct,0,selectedProduct._id)
+                                addtoCart(selectedProduct,1,selectedProduct._id)
                          }} title='Add' />
                     </View>
                 </View>
