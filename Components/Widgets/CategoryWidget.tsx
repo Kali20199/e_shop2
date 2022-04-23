@@ -9,7 +9,6 @@ function CategoryWidget(category:any) {
   const categorys = category.data as ICategory 
   return (
     <TouchableOpacity onPress={()=>{
-
       getProductByCategory(categorys._id)
     }}>
       <View style={styles.mainView}>

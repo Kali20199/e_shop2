@@ -1,11 +1,11 @@
+import { shippemt } from "./EmptyClasses"
+import { IShippmentModel } from "./ShippmentModel"
+
 export interface IUserModel {
 name:string
 email:string
 image:string
-street:string
-city:string
-zip:string
-phone:string
+shippment:IShippmentModel
 isAdmin:boolean
 
 }  
@@ -13,23 +13,17 @@ export class  UserModel {
 name= `` 
 email= `` 
 image= `` 
-street= `` 
-city= `` 
-zip= `` 
-phone= `` 
 isAdmin=false
+shippment=shippemt
 
 constructor(
 name:  string,
-email:  string,image:  string,street:  string,city:  string,zip:  string,
-phone:  string,isAdmin:  boolean,){this.name=name
+email:  string,shippment:IShippmentModel,image:  string,isAdmin:  boolean){
+this.name=name
 this.email=email
 this.image=image
-this.street=street
-this.city=city
-this.zip=zip
-this.phone=phone
 this.isAdmin=isAdmin
+this.shippment = shippment
 
 }
 }

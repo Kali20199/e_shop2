@@ -1,19 +1,29 @@
 import React, { useEffect } from 'react';
-import {  StyleSheet, Text, View } from 'react-native';
+import {  Alert, StyleSheet, Text, ToastAndroid, View } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './store/store';
 import MainNavigator from './Components/MainNavigator';
 import { NavigationContainer } from '@react-navigation/native';
-
+import Header from './Components/Shared/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PERSISTENCE_KEY} from './store/User'
+import Toast,{ErrorToast} from 'react-native-toast-message'
 function App(props) {
 
-  const { userStore, ProductStore, CategoryStore } = useStore()
+  const { ProcessStore:{authProcess}, ProductStore,userStore:{user,init_User} } = useStore()
 
   const fetchFromEpress = async () => {
 
 
     await ProductStore.getProducts()
-    await CategoryStore.getCatgories()
+  
+   
+    const isAuth =  await AsyncStorage.getItem(PERSISTENCE_KEY)
+   if(isAuth !==null) { 
+    authProcess()
+    init_User()
+   }
+
 
   }
 
@@ -22,19 +32,22 @@ function App(props) {
     fetchFromEpress()
 
   }, [])
+ 
 
-  {/* <Header/> */ }
   return (
     // <View>
     //   <Text>dfsdfsdf</Text>
     // </View>
 
-
-<NavigationContainer>
-
-<MainNavigator />
-
-</NavigationContainer>
+ 
+   
+     <NavigationContainer>
+     <Header/> 
+     <MainNavigator />
+     <Toast ref={(ref)=>Toast.setRef(ref)} />
+     {/* <ErrorToast ref={(ref)=>Toast.setRef(ref)}   /> */}
+     </NavigationContainer>
+ 
 
   );
 }

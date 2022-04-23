@@ -4,13 +4,14 @@ import { IUserModel } from '../Models/UserModel';
 import { ICategory } from './../Models/CategoryModel';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { PERSISTENCE_KEY } from '../store/User';
+import { OrderModel } from '../Models/OrderModel';
 
 
 axios.defaults.baseURL = 'http:/192.168.1.30:5000/api'
 axios.interceptors.request.use(async (request) => {
     const token = await AsyncStorage.getItem('UserToekn', (error) => { })
 
-    request.headers!.Authorization = `Bearer  ${token}`
+    request.headers.Authorization = `Bearer  ${token}`
 
     return request
 },
@@ -29,7 +30,9 @@ axios.interceptors.response.use(async (response: AxiosResponse) => {
 },
     (responseError: any) => {
 
-        console.log(responseError)
+        console.log("Error in agent" +responseError)
+
+        return responseError
     })
 
 
@@ -53,10 +56,16 @@ const product = {
 
 }
 
+const order = {
+    add:(order:OrderModel)=> axios.post('/Order/add',order),
+    getMyOrders:()=>axios.get('/Order/myOrders')
+}
+
 const agent = {
     Auth,
     Category,
-    product
+    product,
+    order
 }
 
 export default agent

@@ -4,6 +4,8 @@ import { CategoryStore } from './CategoryStore'
 import ProductStore from './ProductStore'
 import User from './User'
 import { CartStore } from './CartStore';
+import { ProcessStore } from './ProcessStore';
+import { OrderStore } from './OrderStore';
 
 
 
@@ -13,8 +15,10 @@ import { CartStore } from './CartStore';
 export const store = ({
     ProductStore: new ProductStore(),
     CategoryStore: new CategoryStore(),
+    ProcessStore:new ProcessStore(),
     CartStore: new CartStore(),
-    userStore: new User()
+    userStore: new User(),
+    OrderStore:new OrderStore()
 })
 
 export const StoreContext = createContext(store)

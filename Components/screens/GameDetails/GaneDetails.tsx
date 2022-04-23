@@ -10,9 +10,9 @@ function GaneDetails() {
     const HeaderMaxHeight = 350
     const { ProductStore: { selectedProduct },CartStore:{addtoCart} } = useStore()
     const AnimatedHeaderHeight = AnimatedHeaderValue.interpolate({
-        inputRange: [0, HeaderMaxHeight - 1],
-        outputRange: [HeaderMaxHeight, 100],
-        extrapolate: 'clamp'
+        inputRange: [0, 150],
+        outputRange: [350, 150],
+        extrapolate:'extend'
     })
 
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     richDescription: {
         fontSize: 18,
         lineHeight: 35,
-
+        color:'grey',
         fontWeight: 'bold',
 
     }

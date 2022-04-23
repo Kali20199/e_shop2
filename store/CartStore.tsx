@@ -20,7 +20,7 @@ export class CartStore {
             const Item = this.MyCart.find(item => item._id == product._id)
             if (!Item) {
                 
-                this.MyCart.push(new CartItemModel(qty,id,product))
+                this.MyCart.push(new CartItemModel(qty,id,product,product.imageUrl,product.price,product.name))
                 this.count++
             } else { 
                 Item.qty+=1

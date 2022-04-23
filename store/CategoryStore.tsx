@@ -8,6 +8,12 @@ export class CategoryStore {
     categories = new Array<Category>()
     selectedGameCategory = new Category("", "", "", "")
 
+
+    constructor() {
+        makeAutoObservable(this)
+
+    }
+
     getCatgories = async () => {
 
         runInAction(async () => {
@@ -32,8 +38,5 @@ export class CategoryStore {
     // }
 
 
-    constructor() {
-        makeAutoObservable(this)
 
-    }
 }
