@@ -5,9 +5,19 @@ import { ICategory } from './../Models/CategoryModel';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { PERSISTENCE_KEY } from '../store/User';
 import { OrderModel } from '../Models/OrderModel';
-
-
+import { Product } from '../Models/ProductModel';
+import mime from 'mime'
+import Form from 'form-data'
 axios.defaults.baseURL = 'http:/192.168.1.30:5000/api'
+const baseUrl = 'http:/192.168.1.30:5000/api'
+// const config ={
+    
+//     headers:{    
+//         "Content-Type":"multipart/form-data",
+//         Authorization:`Bearer ${token}`
+
+
+// }}
 axios.interceptors.request.use(async (request) => {
     const token = await AsyncStorage.getItem('UserToekn', (error) => { })
 
@@ -52,6 +62,24 @@ const Category = {
 
 const product = {
     products: () => axios.get('/product/'),
+    Add:async(product:Product,file:any)=> {
+        let formData = new FormData();   
+        let xhr =new XMLHttpRequest();
+        xhr.open('POST', baseUrl + '/product/Add');
+        formData.append('name',product.name)
+        formData.append('countInStock',product.countInStock)
+        formData.append('richDescription',product.richDescription)
+        formData.append('price',product.price)
+        formData.append('category',product.category)
+        formData.append('color',product.color)
+        formData.append('File', {...file, name: 'image.jpg', type: 'image/jpeg'});
+
+     return xhr.send(formData)
+       // return axios.post('/product/Add',formData,config)
+    
+    },
+
+        
     getProductByCategory: (id: string) => axios.get(`/product/category/${id}`),
 
 }

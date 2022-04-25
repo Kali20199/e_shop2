@@ -1,88 +1,196 @@
-import { Button } from '@rneui/base'
+
 import React, { useEffect, useState } from 'react'
-import { Alert, BackHandler, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, BackHandler, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,Button, PermissionsAndroid, ToastAndroid } from 'react-native'
 import { product } from '../../Models/EmptyClasses'
-import { Product } from '../../Models/ProductModel'
+import { IProduct, Product } from '../../Models/ProductModel'
 import { useStore } from '../../store/store'
 import { Sharedtstyle } from '../Shared/SharedStyle'
 import AddCategoryForm from './AddCategoryForm'
 import SwipapleModal from './Widget/SwipapleModal'
+import Entypo from 'react-native-vector-icons/Entypo'
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker'
 
-function AdminProductFormScreen({ title }: any) {
-    const { ProductStore: { selectedProduct } } = useStore()
+function AdminProductFormScreen({ title, AddProductsetSwipeModal }: any) {
+    const { ProductStore: { selectedProduct, AddNewProduct,SetselectedProduct ,setFile} } = useStore()
+    const [image,setimage] = useState<any>({uri:'https://archive.org/download/no-photo-available/no-photo-available.png'})
     const [swipeModal, setSwipeModal] = useState(false);
-    var Product = product as any
-    if (title == "Edit Product") {
-         Product = selectedProduct as any
+
+   
+
+  
+
+
+    const OpenCamera = async () => {
+
+        await launchCamera({includeBase64:true, quality:1,mediaType: 'photo'}, ({ assets }) => {
+               
+            try{
+                setimage(assets![0])
+                setFile(assets![0])
+            } catch(e){
+
+           }   });}
+    const SelectFromLibarary = async () => {
+        await launchImageLibrary({ quality:1 ,mediaType: 'photo' }, ({ assets }) => {
+        
+        })
+
     }
+    const requestCameraPermission = async () => {
+        try {
+            const granted = await PermissionsAndroid.request(
+                PermissionsAndroid.PERMISSIONS.CAMERA,
+                {
+                    title: "App Camera Permission",
+                    message: "App needs access to your camera ",
+                    buttonNeutral: "Ask Me Later",
+                    buttonNegative: "Cancel",
+                    buttonPositive: "OK"
+                }
+            );
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                console.log("Camera permission given");
+                await OpenCamera()
+            } else {
+                console.log("Camera permission denied");
+            }
+        } catch (err) {
+            console.warn(err);
+        }
+    };
+
 
     useEffect(() => {
+     
+        if (title == "Edit Product") {
+          
+            setimage({uri:selectedProduct.imageUrl})
+        }else{
+            SetselectedProduct(product)
+        }
+     
         const backAction = () => {
-          Alert.alert("Hold on!", "Are you sure you want to go back?", [
-            {
-              text: "Cancel",
-              onPress: () => null,
-              style: "cancel"
-            },
-            { text: "YES", onPress: () => BackHandler.exitApp() }
-          ]);
-          return true;
+            Alert.alert("Hold on!", "Are you sure you want to go back?", [
+                {
+                    text: "Cancel",
+                    onPress: () => null,
+                    style: "cancel"
+                },
+                { text: "YES", onPress: () => BackHandler.exitApp() }
+            ]);
+            return true;
         };
-    
+
         const backHandler = BackHandler.addEventListener(
-          "hardwareBackPress",
-          backAction
+            "hardwareBackPress",
+            backAction
         );
-    
+
         return () => backHandler.remove();
-      }, []);
+    }, []);
     const handleInput = (event: any) => {
         const { nativeEvent } = event
         const Type = event._targetInst.memoizedProps.nativeID
-        Product[Type] = nativeEvent.text
+        selectedProduct[Type] = nativeEvent.text
 
+    }
+
+
+    const handleSubmit = () => {
+        const {name,price,countInStock,richDescription} = selectedProduct
+        if(name!=='' && price!==0 && countInStock!==0 && richDescription!==''){
+            setSwipeModal(true)
+        }else{
+            ToastAndroid.showWithGravity(
+                "Please Fill Missing Fields",
+                ToastAndroid.SHORT,
+                ToastAndroid.CENTER
+              );
+            
+        }
+      
+     //   AddNewProduct(selectedProduct)
     }
     //   
 
 
     return (
-        <View style={style.mainView}>
-            <View>
-                <Text style={Sharedtstyle.title}> {title}</Text>
-            </View>
-            <View>
-                <TextInput  onBlur={()=>{}}   onFocus={()=>{}}  defaultValue={Product.name} keyboardType='default' onChange={handleInput} nativeID='name' placeholder={'name'} style={Sharedtstyle.basicInput} />
-            </View>
-
-            <View>
-                <TextInput  defaultValue={Product.brand} onChange={handleInput} nativeID='brand' placeholder={'brand'} style={Sharedtstyle.basicInput} />
-            </View>
-
-            <View>
-                <TextInput defaultValue={Product.price.toString()}  onChange={handleInput} nativeID='Price' placeholder={'price'} style={Sharedtstyle.basicInput} />
-            </View>
-
-            <View>
-                <TextInput defaultValue={Product.countInStock.toString()} onChange={handleInput} nativeID='countInStock' placeholder={'countInStock'} style={Sharedtstyle.basicInput} />
-            </View>
-
-            <View>
-                <TextInput defaultValue={Product.description} onChange={handleInput} nativeID='description' placeholder={'description'} style={Sharedtstyle.basicInput} />
-            </View>
-            <Button onPress={()=>{
-                setSwipeModal(true)
-            }} title={"Next"}/>
-            <SwipapleModal title={title} swipeModal={swipeModal} Element={()=><AddCategoryForm setSwipeModal={setSwipeModal} product={product}/>}  setSwipeModal={setSwipeModal}  />
+        <View>
+            <ScrollView style={{marginTop:20}}>
+                <View style={style.mainView}>
+                    <View>
+                        <Text style={Sharedtstyle.title}> {title}</Text>
+                    </View>
+                    <View style={style.imgView}>
+                        <Image style={style.img}  source={image} />
+                        <TouchableOpacity onPress={()=>{
+                            requestCameraPermission()
+                        }}>
+                            <Entypo color='black' style={style.cameraIcon} name='camera' size={25} />
+                        </TouchableOpacity>
+                    </View>
+                    <View>
+                        <TextInput onBlur={() => { }} onFocus={() => { }} defaultValue={selectedProduct.name} keyboardType='default' onChange={handleInput} nativeID='name' placeholder={'name'} style={Sharedtstyle.basicInput} />
+                    </View>
+                    <View>
+                        <TextInput defaultValue={selectedProduct.brand} onChange={handleInput} nativeID='brand' placeholder={'brand'} style={Sharedtstyle.basicInput} />
+                    </View>
+                    <View>
+                        <TextInput defaultValue={selectedProduct.price.toString()} onChange={handleInput} nativeID='price' placeholder={'price'} style={Sharedtstyle.basicInput} />
+                    </View>
+                    <View>
+                        <TextInput defaultValue={selectedProduct.countInStock.toString()} onChange={handleInput} nativeID='countInStock' placeholder={'countInStock'} style={Sharedtstyle.basicInput} />
+                    </View>
+                    <View>
+                        <TextInput defaultValue={selectedProduct.richDescription} onChange={handleInput} nativeID='richDescription' placeholder={'description'} style={Sharedtstyle.basicInput} />
+                    </View>
+                
+                    <View style={style.nextBtView}>
+                        <Button onPress={() => {
+                            handleSubmit()
+                       
+                        }} title={"Next"} />
+                    </View>
+                    <Button title='Back' onPress={()=>AddProductsetSwipeModal(false)}></Button>
+                    <SwipapleModal   title={title} swipeModal={swipeModal} Element={() => <AddCategoryForm AddProductsetSwipeModal={AddProductsetSwipeModal} setSwipeModal={setSwipeModal} selectedProduct={selectedProduct}  />} setSwipeModal={setSwipeModal} />
+                </View>
+            </ScrollView>
         </View>
     )
 }
 
 const style = StyleSheet.create({
     mainView: {
-        marginTop: 100,
+        marginTop: 60,
         alignItems: 'center',
 
     },
+    nextBtView: {
+        marginTop: 30,
+        marginBottom:20,
+    },
+
+    imgView: {
+        height: 170,
+        width: 170,
+    
+    },
+    cameraIcon: {
+        position:'absolute',
+        top:130,
+        zIndex:2,
+        right:5
+    },
+    img:{
+        position:'absolute',
+        marginBottom:10,
+        height:170,
+        width:170,
+        borderWidth: 5,
+        borderRadius:90,
+        borderColor: 'grey',
+        
+    }
 })
 
 export default AdminProductFormScreen

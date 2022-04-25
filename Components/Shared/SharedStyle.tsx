@@ -33,6 +33,11 @@ export const Sharedtstyle = StyleSheet.create({
     },
     normaltxt:{
         color:'black'
+    },
+    mainVwiew:{
+        marginBottom:20,
+        justifyContent:'center',
+        alignContent:'center'
     }
     
 

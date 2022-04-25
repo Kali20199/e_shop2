@@ -1,4 +1,5 @@
 
+import axios from 'axios'
 import { makeAutoObservable, reaction, runInAction } from 'mobx'
 import agent from '../agent/agent'
 import { Category } from '../Models/CategoryModel'
@@ -11,7 +12,7 @@ export default class ProductStore {
     products = new Array<Product>()
     filterdProducts = new Array<Product>()
     selectedProduct = product
-
+    file:any;
 
 
     constructor() {
@@ -19,6 +20,15 @@ export default class ProductStore {
 
     }
 
+    AddNewProduct=async(product:Product,file:any)=>{
+        runInAction(async()=>{
+            await agent.product.Add(product,file).then((res)=>{
+                console.log("Product Added")
+            }).catch((err)=>{
+                console.log("Falided Adding Product")
+            })
+        })
+    }
 
     getProducts = async () => {
 
@@ -54,7 +64,16 @@ export default class ProductStore {
         runInAction(() => {
             this.selectedProduct = product
         })
-
     }
 
+    setSelectedProductCategory=(catname:string)=>{
+        runInAction(()=>{
+            this.selectedProduct.category.name = catname
+        })
+    }
+    setFile=(file:any)=>{
+        runInAction(()=>{
+            this.selectedProduct.file = file
+        })
+    }
 }

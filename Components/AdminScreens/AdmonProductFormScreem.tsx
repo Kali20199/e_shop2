@@ -11,6 +11,7 @@ import Icons from 'react-native-vector-icons/Ionicons'
 import Icons2 from 'react-native-vector-icons/Fontisto'
 import SwipapleModal from './Widget/SwipapleModal'
 import AdminProductFormScreen from './AdminProductFormScreen'
+import { product } from '../../Models/EmptyClasses'
 const height = Dimensions.get('window').height
 const width = Dimensions.get('window').width
 
@@ -40,7 +41,7 @@ function AdmonProductFormScreem() {
     }
   }
   useEffect(() => {
-
+    SetselectedProduct(product)
  
   }, []);
   return (
@@ -77,7 +78,7 @@ function AdmonProductFormScreem() {
  </View>
  : null}
 
-    <SwipapleModal title={title} swipeModal={swipeModal} Element={()=><AdminProductFormScreen title={title}/>}  setSwipeModal={setSwipeModal}  />
+    <SwipapleModal title={title} swipeModal={swipeModal} Element={()=><AdminProductFormScreen AddProductsetSwipeModal={setSwipeModal} title={title}/>}  setSwipeModal={setSwipeModal}  />
       <FlatList renderItem={({ item, index }) => <AdminProductItem   SetselectedProduct={SetselectedProduct} setShow={setShow} product={item} index={index} />} data={filterd} />
 
     </View>

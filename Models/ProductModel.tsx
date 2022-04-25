@@ -15,7 +15,8 @@ export interface IProduct {
     numReviews: number,
     isFetueared: boolean,
     deteCreated: number,
-    color: string
+    color: string,
+    file: any
 
 }
 
@@ -36,12 +37,13 @@ export class Product {
     isFetueared = false
     deteCreated = Date.now()
     color = ''
+    file = ''
 
 
 
 
     constructor(_id: string, name: string, description: string, richDescription: string, imageUrl: string, images: Array<string>, brand: string, price: number,
-        category: Category, countInStock: number, rating: number, numReviews: number, isFetueared: boolean, dateCreated: number, color = '#3333cc') {
+        category: Category, countInStock: number, rating: number, numReviews: number, isFetueared: boolean, dateCreated: number, color = '#3333cc', file?: any) {
 
         this._id = _id
         this.name = name,
@@ -58,6 +60,7 @@ export class Product {
             this.price = price,
             this.brand = brand
         this.color = color
+        this.file = file
 
     }
 }

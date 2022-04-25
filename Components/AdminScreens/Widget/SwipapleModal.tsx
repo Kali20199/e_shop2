@@ -17,23 +17,18 @@ function SwipapleModal({ swipeModal, setSwipeModal,Element }: Props) {
  
     return (
         <View>
-
-
             <SwipeUpDownModal 
                 modalVisible={swipeModal}
                 PressToanimate={animateModal}
                 ContentModalStyle={styles.Modal}
                 ContentModal={<View>
                    <Element/>
-                </View>}
-                
+                </View>}    
                 onClose={() => {
                     setSwipeModal(false);
                     setanimateModal(false);
                 }}
                 />
-
-
         </View>
     )
 }
@@ -51,7 +46,7 @@ const styles = StyleSheet.create({
     containerContent: {
         height: 150,
         marginTop: 40,
-        backgroundColor: '#ffffffed'
+        backgroundColor: '#fdfdfdec'
     },
     containerHeader: {
 
@@ -66,7 +61,7 @@ const styles = StyleSheet.create({
     },
     Modal: {
         height: 150,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#fdfdfd',
         marginTop: 0,
     }
 });
