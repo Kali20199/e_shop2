@@ -8,16 +8,35 @@ import { OrderModel } from '../Models/OrderModel';
 import { Product } from '../Models/ProductModel';
 import mime from 'mime'
 import Form from 'form-data'
+import { Alert } from 'react-native';
+import axios2 from 'axios'
 axios.defaults.baseURL = 'http:/192.168.1.30:5000/api'
-const baseUrl = 'http:/192.168.1.30:5000/api'
+const baseUrl = 'http://192.168.1.30:5000/api'
+const aspCoreURL = 'http://192.168.1.30:5003/api/WorkSpace/uploadImage'
 // const config ={
-    
+
 //     headers:{    
 //         "Content-Type":"multipart/form-data",
 //         Authorization:`Bearer ${token}`
 
 
 // }}
+let xhr = new XMLHttpRequest();
+
+// If specified, responseType must be empty string or "document"
+xhr.responseType = 'document';
+
+// Force the response to be parsed as XML
+//xhr.overrideMimeType('text/xml');
+
+xhr.onload = function () {
+    Alert.alert("R1")
+    if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+        Alert.alert("Response")
+    }
+};
+
+
 axios.interceptors.request.use(async (request) => {
     const token = await AsyncStorage.getItem('UserToekn', (error) => { })
 
@@ -40,7 +59,7 @@ axios.interceptors.response.use(async (response: AxiosResponse) => {
 },
     (responseError: any) => {
 
-        console.log("Error in agent" +responseError)
+        console.log("Error in agent" + responseError)
 
         return responseError
     })
@@ -62,31 +81,36 @@ const Category = {
 
 const product = {
     products: () => axios.get('/product/'),
-    Add:async(product:Product,file:any)=> {
-        let formData = new FormData();   
-        let xhr =new XMLHttpRequest();
-        xhr.open('POST', baseUrl + '/product/Add');
-        formData.append('name',product.name)
-        formData.append('countInStock',product.countInStock)
-        formData.append('richDescription',product.richDescription)
-        formData.append('price',product.price)
-        formData.append('category',product.category)
-        formData.append('color',product.color)
-        formData.append('File', {...file, name: 'image.jpg', type: 'image/jpeg'});
+    Add: async (product: Product, file: any) => {
+        let formData = new FormData();
 
-     return xhr.send(formData)
-       // return axios.post('/product/Add',formData,config)
-    
+      //    xhr.open('POST', aspCoreURL);
+       xhr.open('POST', baseUrl + '/product/Add');
+        formData.append('name', product.name)
+        formData.append('countInStock', product.countInStock)
+        formData.append('richDescription', product.richDescription)
+        formData.append('price', product.price)
+        formData.append('category', product.category)
+        formData.append('color', product.color)
+        formData.append('File', { ...file, name: 'image.jpg', type: 'image/jpeg' });
+        //    await axios2.post(aspCoreURL,formData).then(res=>{
+        //        console.log(res.data)
+        //    })
+        return xhr.send(formData)
+        // return axios.post('/product/Add',formData,config)
+
     },
 
-        
+
     getProductByCategory: (id: string) => axios.get(`/product/category/${id}`),
+    delete: (id: string) => axios.delete(`/product/delete/${id}`),
+    update: (product: Product) => { axios.post('product/update', product) }
 
 }
 
 const order = {
-    add:(order:OrderModel)=> axios.post('/Order/add',order),
-    getMyOrders:()=>axios.get('/Order/myOrders')
+    add: (order: OrderModel) => axios.post('/Order/add', order),
+    getMyOrders: () => axios.get('/Order/myOrders')
 }
 
 const agent = {

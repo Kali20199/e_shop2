@@ -12,6 +12,7 @@ export default class ProductStore {
     products = new Array<Product>()
     filterdProducts = new Array<Product>()
     selectedProduct = product
+    count =0 
     file:any;
 
 
@@ -20,21 +21,38 @@ export default class ProductStore {
 
     }
 
-    AddNewProduct=async(product:Product,file:any)=>{
+    AddNewProduct=async(product:Product,file:any,fun1?:any,fun2?:any,fun3?:any)=>{
         runInAction(async()=>{
-            await agent.product.Add(product,file).then((res)=>{
-                console.log("Product Added")
-            }).catch((err)=>{
-                console.log("Falided Adding Product")
+            fun1(true)
+            await agent.product.Add(product,file).then(res=>{
+
+                fun1(false)
+                fun2.navigate("Products"as any)  
+                fun3.show({
+                    
+                    text1:'Product Added Succsseffully xxx'
+                }) 
+
             })
+          
+        })
+    }
+
+    deleteProduct=(id:string)=>{
+        runInAction(async()=>{
+            await agent.product.delete(id).then(res=>{
+                const prods =   this.products.filter(x=>x._id !== id)
+                this.products = prods
+                this.count++
+            })
+         
         })
     }
 
     getProducts = async () => {
 
         runInAction(async () => {
-            const product = await agent.product.products().then(res => {
-
+             await agent.product.products().then(res => {
                 this.products = res.data
             })
 

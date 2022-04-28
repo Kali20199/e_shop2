@@ -6,6 +6,7 @@ export class ProcessStore{
     ShippmentProcess = false
     CheckoutProcess = false
     PaymentProcess = false
+    uploadingProcess=false
 
     constructor(){
         makeAutoObservable(this)
@@ -40,6 +41,11 @@ export class ProcessStore{
     unAuthProcess=()=>{
         runInAction(()=>{
             this.AuthProcess = false
+        })
+    }
+    uploading=(status:boolean)=>{
+        runInAction(()=>{
+            this.uploadingProcess = status 
         })
     }
   

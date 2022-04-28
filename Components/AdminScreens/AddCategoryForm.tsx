@@ -9,6 +9,7 @@ import AdminCategoryWidget from './Widget/AdminCategoryWidget'
 import  Toast  from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native'
 import { useStore } from '../../store/store'
+import { observer } from 'mobx-react-lite'
 
 
 interface Props {
@@ -20,7 +21,7 @@ interface Props {
 
 function AddCategoryForm({  setSwipeModal,AddProductsetSwipeModal }: Props) {
     const [selectedCategory, setselectedCategory] = useState("");
-    const {ProductStore:{AddNewProduct,selectedProduct,file}} = useStore()
+    const {ProductStore:{AddNewProduct,selectedProduct,file},ProcessStore:{uploading}} = useStore()
     const nav = useNavigation()
     
     const data = ["Beuty","Cars","Computer","Games","Homne","Mobile"]
@@ -39,12 +40,11 @@ function AddCategoryForm({  setSwipeModal,AddProductsetSwipeModal }: Props) {
                 <Button style={style.finishBt} onPress={() => {
                     setSwipeModal(false)
                     AddProductsetSwipeModal(false)
-                    AddNewProduct(selectedProduct,selectedProduct.file)
-                    nav.navigate("Products"as any)
-                    Toast.show({
-                        
-                        text1:'Product Added Succsseffull'
-                    }) 
+              
+                    AddNewProduct(selectedProduct,selectedProduct.file,uploading,nav,Toast).then(()=>{
+                   
+                    })
+                 
                 }}  >Finish</Button>
             </View>
         </View>
@@ -68,4 +68,4 @@ const style = StyleSheet.create({
 })
 
 
-export default AddCategoryForm
+export default observer(AddCategoryForm)

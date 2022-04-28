@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react'
 import { StyleSheet, View,Animated ,Easing} from 'react-native'
 import {Text,Button} from 'react-native-paper'
 import { IProduct } from '../../Models/ProductModel'
+import { useStore } from '../../store/store'
 
 
 interface Props {
@@ -18,7 +19,7 @@ function Modal({ show, setShow,selectedProduct,setTitle,setSwipeModal }: Props) 
 
     const AnimatedOpacity =new Animated.Value(0)
     const fadeAnim = useRef(new Animated.Value(0)).current
-    
+    const {ProductStore:{deleteProduct}} = useStore()
 
  
     useEffect(() => {
@@ -39,7 +40,10 @@ function Modal({ show, setShow,selectedProduct,setTitle,setSwipeModal }: Props) 
                     <Text>{selectedProduct.name} </Text>
                 </View> 
             <View style={style.actionView}>
-                <Button>
+                <Button onPress={()=>{
+                    deleteProduct(selectedProduct._id)
+                    setShow(false)
+                }}>
                     Delete
                 </Button>
 
